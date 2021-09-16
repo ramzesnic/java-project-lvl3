@@ -31,4 +31,28 @@ class ValidatorTest {
 
         assertEquals(schema.isValid(TEST1_STR), false);
     }
+
+    @Test
+    void testNumberValidator() {
+        final Validator v = new Validator();
+        final NumberSchema schema = v.number();
+
+        assertEquals(schema.isValid(null), true);
+
+        schema.required();
+
+        assertEquals(schema.isValid(null), false);
+        assertEquals(schema.isValid(10), true);
+        //assertEquals(schema.isValid("5"), true);
+        assertEquals(schema.positive().isValid(10), true);
+        assertEquals(schema.isValid(-10), false);
+
+        schema.range(5, 10);
+
+        assertEquals(schema.isValid(5), true);
+        assertEquals(schema.isValid(10), true);
+        assertEquals(schema.isValid(4), false);
+        assertEquals(schema.isValid(11), false);
+
+    }
 }
