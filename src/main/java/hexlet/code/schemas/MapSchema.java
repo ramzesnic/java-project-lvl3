@@ -1,11 +1,11 @@
-package hexlet.code;
+package hexlet.code.schemas;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
-class MapSchema<K, V> extends BaseSchema<Map<K, V>> {
+public final class MapSchema<K, V> extends BaseSchema<Map<K, V>> {
     private Predicate<Map<K, V>> shapeValidator(Integer size, Map<String, BaseSchema> schemas) {
         return map -> schemas.entrySet().stream()
                 .map(sc -> {
@@ -28,7 +28,7 @@ class MapSchema<K, V> extends BaseSchema<Map<K, V>> {
         final Predicate<Map<K, V>> validator = validators
                 .get(validatorName)
                 .apply(size, schemas);
-        selectedValidators.add(validator);
+        getSelectedValidators().add(validator);
     }
 
     public MapSchema<K, V> required() {

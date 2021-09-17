@@ -1,11 +1,11 @@
-package hexlet.code;
+package hexlet.code.schemas;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-class StringSchema extends BaseSchema<String> {
+public final class StringSchema extends BaseSchema<String> {
     private static final Map<String, Function<String, Predicate<String>>> VALIDATORS = Map.of(
             REQUIRED, (search) -> (data) -> !Optional.ofNullable(data)
                     .orElse(BLANK)
@@ -18,7 +18,7 @@ class StringSchema extends BaseSchema<String> {
         final Predicate<String> validator = VALIDATORS
                 .get(validatorName)
                 .apply(search);
-        selectedValidators.add(validator);
+        getSelectedValidators().add(validator);
     }
 
     public StringSchema required() {

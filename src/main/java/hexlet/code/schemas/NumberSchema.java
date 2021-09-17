@@ -1,4 +1,4 @@
-package hexlet.code;
+package hexlet.code.schemas;
 
 import java.time.temporal.ValueRange;
 import java.util.Map;
@@ -6,13 +6,13 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
-class NumberSchema extends BaseSchema<Integer> {
+public final class NumberSchema extends BaseSchema<Integer> {
     private static final Map<String, BiFunction<Integer, Integer, Predicate<Integer>>> VALIDATORS = Map.of(
             REQUIRED, (min, max) -> (data) -> Optional.ofNullable(data)
                     .isPresent(),
             POSITIVE, (min, max) -> (data) -> Optional.ofNullable(data)
                     .map(value -> value >= 0)
-                    .orElse(false),
+                    .orElse(true),
             RANGE, (min, max) -> (data) -> Optional.ofNullable(data)
                     .map(value -> ValueRange.of(min, max).isValidIntValue(data))
                     .orElse(false));
@@ -21,7 +21,7 @@ class NumberSchema extends BaseSchema<Integer> {
         final Predicate<Integer> validator = VALIDATORS
                 .get(validatorName)
                 .apply(min, max);
-        selectedValidators.add(validator);
+        getSelectedValidators().add(validator);
     }
 
     public NumberSchema required() {
