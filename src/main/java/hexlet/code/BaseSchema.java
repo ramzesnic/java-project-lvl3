@@ -10,6 +10,7 @@ abstract class BaseSchema<T> {
     protected static final String POSITIVE = "positive";
     protected static final String RANGE = "range";
     protected static final String BLANK = "";
+    protected static final String SIZE = "size";
 
     protected final List<Predicate<T>> selectedValidators = new ArrayList<>();
 
