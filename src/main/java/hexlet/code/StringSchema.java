@@ -7,7 +7,7 @@ import java.util.function.Predicate;
 
 class StringSchema extends BaseSchema<String> {
     private static final Map<String, Function<String, Predicate<String>>> VALIDATORS = Map.of(
-            REQUARED, (search) -> (data) -> !Optional.ofNullable(data)
+            REQUIRED, (search) -> (data) -> !Optional.ofNullable(data)
                     .orElse(BLANK)
                     .isBlank(),
             CONSTAINTS, (search) -> (data) -> Optional.ofNullable(data)
@@ -21,8 +21,8 @@ class StringSchema extends BaseSchema<String> {
         selectedValidators.add(validator);
     }
 
-    public StringSchema requared() {
-        this.selectValidator(REQUARED, BLANK);
+    public StringSchema required() {
+        this.selectValidator(REQUIRED, BLANK);
         return this;
     }
 

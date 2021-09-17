@@ -20,7 +20,7 @@ class ValidatorTest {
         assertEquals(schema.isValid(TEST2_STR), true);
         assertEquals(schema.isValid(null), true);
 
-        schema.requared();
+        schema.required();
 
         assertEquals(schema.isValid(TEST1_STR), true);
         assertEquals(schema.isValid(TEST1_STR), true);
@@ -66,7 +66,7 @@ class ValidatorTest {
 
         assertEquals(schema.isValid(null), true);
 
-        schema.requared();
+        schema.required();
 
         assertEquals(schema.isValid(null), false);
         assertEquals(schema.isValid(new HashMap<>()), true);
@@ -80,5 +80,36 @@ class ValidatorTest {
         schema.isValid(data);
         data.put("key2", "value2");
         schema.isValid(data);
+    }
+
+    @Test
+    void testMapValueValidator() {
+        final Validator v = new Validator();
+        final MapSchema schema = v.map();
+
+        Map<String, BaseSchema> schemas = new HashMap<>();
+        schemas.put("name", v.string().required());
+        schemas.put("age", v.number().positive());
+        schema.shape(schemas);
+
+        Map<String, Object> human1 = new HashMap<>();
+        human1.put("name", "Kolya");
+        human1.put("age", 100);
+        assertEquals(schema.isValid(human1), true);
+
+        Map<String, Object> human2 = new HashMap<>();
+        human2.put("name", "Maya");
+        human2.put("age", null); // true
+        assertEquals(schema.isValid(human2), false);
+
+        Map<String, Object> human3 = new HashMap<>();
+        human3.put("name", "");
+        human3.put("age", null);
+        assertEquals(schema.isValid(human3), false);
+
+        Map<String, Object> human4 = new HashMap<>();
+        human4.put("name", "Valya");
+        human4.put("age", -5);
+        assertEquals(schema.isValid(human4), false);
     }
 }

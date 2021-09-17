@@ -8,7 +8,7 @@ import java.util.function.Predicate;
 
 class NumberSchema extends BaseSchema<Integer> {
     private static final Map<String, BiFunction<Integer, Integer, Predicate<Integer>>> VALIDATORS = Map.of(
-            REQUARED, (min, max) -> (data) -> Optional.ofNullable(data)
+            REQUIRED, (min, max) -> (data) -> Optional.ofNullable(data)
                     .isPresent(),
             POSITIVE, (min, max) -> (data) -> Optional.ofNullable(data)
                     .map(value -> value >= 0)
@@ -25,7 +25,7 @@ class NumberSchema extends BaseSchema<Integer> {
     }
 
     public NumberSchema required() {
-        this.selectValidator(REQUARED, 0, 0);
+        this.selectValidator(REQUIRED, 0, 0);
         return this;
     }
 
