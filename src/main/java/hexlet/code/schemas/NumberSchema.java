@@ -12,7 +12,7 @@ public final class NumberSchema extends BaseSchema<Object> {
                     .map(value -> value instanceof Integer)
                     .orElse(false),
             POSITIVE, (min, max) -> (data) -> Optional.ofNullable(data)
-                    .map(value -> value instanceof Integer && (int) value >= 0)
+                    .map(value -> value instanceof Integer && (int) value > 0)
                     .orElse(true),
             RANGE, (min, max) -> (data) -> Optional.ofNullable(data)
                     .map(value -> value instanceof Integer && ValueRange.of(min, max).isValidIntValue((int) data))
