@@ -15,11 +15,13 @@ import hexlet.code.schemas.BaseSchema;
 class ValidatorTest {
     private static final String TEST1_STR = "what does the fox say";
     private static final String TEST2_STR = "";
+    private static final String TEST3_STR = "asdf";
     private static final String CONSTAINTS1_STR = "what";
     private static final String CONSTAINTS2_STR = "whatttt";
 
     @Test
     void testStringValidator() {
+        final int minLength = 5;
         final Validator v = new Validator();
         final StringSchema schema = v.string();
         assertEquals(schema.isValid(TEST2_STR), true);
@@ -31,6 +33,11 @@ class ValidatorTest {
         assertEquals(schema.isValid(TEST1_STR), true);
         assertEquals(schema.isValid(TEST2_STR), false);
         assertEquals(schema.isValid(null), false);
+
+        schema.minLength(minLength);
+
+        assertEquals(schema.isValid(TEST3_STR), false);
+        assertEquals(schema.isValid(TEST1_STR), true);
 
         schema.containts(CONSTAINTS1_STR);
 
