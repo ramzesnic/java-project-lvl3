@@ -16,7 +16,7 @@ public final class NumberSchema extends BaseSchema<Object> {
                     .orElse(true),
             RANGE, (min, max) -> (data) -> Optional.ofNullable(data)
                     .map(value -> value instanceof Integer && ValueRange.of(min, max).isValidIntValue((int) data))
-                    .orElse(false));
+                    .orElse(true));
 
     private void selectValidator(String validatorName, int min, int max) {
         final Predicate<Object> validator = VALIDATORS
