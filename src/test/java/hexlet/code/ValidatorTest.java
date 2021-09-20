@@ -57,6 +57,7 @@ class ValidatorTest {
 
         assertEquals(schema.isValid(null), false);
         assertEquals(schema.isValid(ten), true);
+        assertEquals(schema.isValid("5"), false);
         assertEquals(schema.positive().isValid(ten), true);
         assertEquals(schema.isValid(tenNegative), false);
 

@@ -6,19 +6,20 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
-public final class NumberSchema extends BaseSchema<Integer> {
-    private static final Map<String, BiFunction<Integer, Integer, Predicate<Integer>>> VALIDATORS = Map.of(
+public final class NumberSchema extends BaseSchema<Object> {
+    private static final Map<String, BiFunction<Integer, Integer, Predicate<Object>>> VALIDATORS = Map.of(
             REQUIRED, (min, max) -> (data) -> Optional.ofNullable(data)
-                    .isPresent(),
+                    .map(value -> value instanceof Integer)
+                    .orElse(false),
             POSITIVE, (min, max) -> (data) -> Optional.ofNullable(data)
-                    .map(value -> value >= 0)
+                    .map(value -> value instanceof Integer && (int) value >= 0)
                     .orElse(true),
             RANGE, (min, max) -> (data) -> Optional.ofNullable(data)
-                    .map(value -> ValueRange.of(min, max).isValidIntValue(data))
+                    .map(value -> value instanceof Integer && ValueRange.of(min, max).isValidIntValue((int) data))
                     .orElse(false));
 
     private void selectValidator(String validatorName, int min, int max) {
-        final Predicate<Integer> validator = VALIDATORS
+        final Predicate<Object> validator = VALIDATORS
                 .get(validatorName)
                 .apply(min, max);
         getSelectedValidators().add(validator);
