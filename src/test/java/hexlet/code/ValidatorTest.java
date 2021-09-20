@@ -39,11 +39,11 @@ class ValidatorTest {
         assertEquals(schema.isValid(TEST3_STR), false);
         assertEquals(schema.isValid(TEST1_STR), true);
 
-        schema.containts(CONSTAINTS1_STR);
+        schema.contains(CONSTAINTS1_STR);
 
         assertEquals(schema.isValid(TEST1_STR), true);
 
-        schema.containts(CONSTAINTS2_STR);
+        schema.contains(CONSTAINTS2_STR);
 
         assertEquals(schema.isValid(TEST1_STR), false);
     }

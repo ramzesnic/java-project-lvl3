@@ -34,7 +34,7 @@ public final class StringSchema extends BaseSchema<String> {
         return this;
     }
 
-    public StringSchema containts(String search) {
+    public StringSchema contains(String search) {
         this.selectValidator(CONSTAINTS, search, 0);
         return this;
     }
