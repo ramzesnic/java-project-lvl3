@@ -2,47 +2,38 @@ package hexlet.code.schemas;
 
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 public final class MapSchema<K, V> extends BaseSchema<Map<K, V>> {
-    private Predicate<Map<K, V>> shapeValidator(Integer size, Map<String, BaseSchema> schemas) {
-        return map -> schemas.entrySet().stream()
-                .map(sc -> {
-                    final String key = sc.getKey();
-                    final BaseSchema validator = sc.getValue();
-                    return validator.isValid(map.get(key));
-                }).allMatch(value -> !!value);
-    }
-
-    private Map<String, BiFunction<Integer, Map<String, BaseSchema>, Predicate<Map<K, V>>>> validators = Map
-            .of(
-                    REQUIRED, (size, schemas) -> map -> Optional.ofNullable(map)
-                            .isPresent(),
-                    SIZE, (size, schemas) -> map -> Optional.ofNullable(map)
-                            .map(value -> value.size() == size)
-                            .orElse(false),
-                    MAP_SHAPE, this::shapeValidator);
-
-    private void selectValidator(String validatorName, int size, Map<String, BaseSchema> schemas) {
-        final Predicate<Map<K, V>> validator = validators
-                .get(validatorName)
-                .apply(size, schemas);
-        getSelectedValidators().add(validator);
-    }
+    private final Function<Map<String, BaseSchema<V>>, Predicate<Map<K, V>>> shapeValidator = schemas -> map -> schemas
+            .entrySet()
+            .stream()
+            .allMatch(sc -> {
+                final String key = sc.getKey();
+                final BaseSchema<V> validator = sc.getValue();
+                return validator.isValid(map.get(key));
+            });
+    private final Function<Integer, Predicate<Map<K, V>>> sizeValidator = (size) -> map -> Optional
+            .ofNullable(map)
+            .map(value -> value.size() == size)
+            .orElse(false);
+    private final Predicate<Map<K, V>> requiredValidator = map -> Optional
+            .ofNullable(map)
+            .isPresent();
 
     public MapSchema<K, V> required() {
-        this.selectValidator(REQUIRED, 0, null);
+        addValidator(requiredValidator);
         return this;
     }
 
     public MapSchema<K, V> sizeof(int size) {
-        this.selectValidator(SIZE, size, null);
+        addValidator(sizeValidator.apply(size));
         return this;
     }
 
-    public MapSchema<K, V> shape(Map<String, BaseSchema> schemas) {
-        this.selectValidator(MAP_SHAPE, 0, schemas);
+    public MapSchema<K, V> shape(Map<String, BaseSchema<V>> schemas) {
+        addValidator(shapeValidator.apply(schemas));
         return this;
     }
 }

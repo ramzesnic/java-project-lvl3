@@ -1,41 +1,35 @@
 package hexlet.code.schemas;
 
-import java.util.Map;
 import java.util.Optional;
-import java.util.function.BiFunction;
 import java.util.function.Predicate;
+import java.util.function.Function;
 
 public final class StringSchema extends BaseSchema<String> {
-    private static final Map<String, BiFunction<String, Integer, Predicate<String>>> VALIDATORS = Map.of(
-            REQUIRED, (search, minLength) -> (data) -> !Optional.ofNullable(data)
-                    .orElse(BLANK)
-                    .isBlank(),
-            CONSTAINTS, (search, minLength) -> (data) -> Optional.ofNullable(data)
-                    .orElse(BLANK)
-                    .contains(search),
-            MIN_LENGHT, (search, minLength) -> (data) -> Optional.ofNullable(data)
-                    .map(str -> str.length() >= minLength)
-                    .orElse(false));
-
-    private void selectValidator(String validatorName, String search, int minLength) {
-        final Predicate<String> validator = VALIDATORS
-                .get(validatorName)
-                .apply(search, minLength);
-        getSelectedValidators().add(validator);
-    }
+    protected static final String BLANK = "";
+    private final Predicate<String> requiredValidator = (data) -> !Optional.ofNullable(data)
+            .orElse(BLANK)
+            .isBlank();
+    private final Function<String, Predicate<String>> containsValidator = (search) -> (data) -> Optional
+            .ofNullable(data)
+            .orElse(BLANK)
+            .contains(search);
+    private final Function<Integer, Predicate<String>> minLengthValidator = (minLength) -> (data) -> Optional
+            .ofNullable(data)
+            .map(str -> str.length() >= minLength)
+            .orElse(false);
 
     public StringSchema required() {
-        this.selectValidator(REQUIRED, BLANK, 0);
+        addValidator(requiredValidator);
         return this;
     }
 
     public StringSchema minLength(int minLength) {
-        this.selectValidator(MIN_LENGHT, BLANK, minLength);
+        addValidator(minLengthValidator.apply(minLength));
         return this;
     }
 
     public StringSchema contains(String search) {
-        this.selectValidator(CONSTAINTS, search, 0);
+        addValidator(containsValidator.apply(search));
         return this;
     }
 }
